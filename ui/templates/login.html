@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+</head>
+<body style="background-color: #e3eafc; font-family: Arial, sans-serif; margin: 0;">
+    <button onclick="window.location.href='/home'"  style="width: 150px; background: #393e82; color: #fff; padding: 12px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; margin-top: 10px; margin-left: 20px;">
+            Home
+        </button>
+    <div style="width: 350px; margin: 80px auto; background: #fff; padding: 30px 25px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+        <h2 style="text-align: center; color: #1a237e; margin-bottom: 25px;">Login</h2>
+        <form>
+            <label for="username" style="display: block; margin-bottom: 8px; color: #333;">Username</label>
+            <input type="text" id="username" name="username" style="width: 100%; padding: 10px; margin-bottom: 18px; border: 1px solid #bdbdbd; border-radius: 5px; font-size: 1em;">
+            
+            <label for="password" style="display: block; margin-bottom: 8px; color: #333;">Password</label>
+            <input type="password" id="password" name="password" style="width: 100%; padding: 10px; margin-bottom: 22px; border: 1px solid #bdbdbd; border-radius: 5px; font-size: 1em;">
+            
+            <button type="submit" style="width: 100%; background: #3949ab; color: #fff; padding: 12px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer;">Login</button>
+        </form>
+        <p style="text-align: center; margin-top: 18px; color: #757575;">
+            Don't have an account? <a href="/register" style="color: #3949ab; text-decoration: none;">Register</a>
+        </p>
+        <button onclick="window.location.href='/register'"  style="width: 100%; background: #1a237e; color: #fff; padding: 12px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; margin-top: 10px;">
+            Register
+        </button>
+    </div>
+</body>
+</html>
