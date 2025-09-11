@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'studenttracker.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # Use 'django.db.backends.sqlite3' for SQLite
+        'NAME': 'studytrack',  # Database name
+        'USER': 'root',       # Your database username
+        'PASSWORD': 'arpan@root123',   # Your database password
+        'HOST': 'localhost',   # Database host, usually 'localhost' for local development
+        'PORT': '3306',        # Default MySQL port
     }
 }
 
