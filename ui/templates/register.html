@@ -2,35 +2,298 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Registration Page</title>
-</head>
-<body style="background-color: #e3eafc; font-family: Arial, sans-serif; margin: 0;">
-        <button onclick="window.location.href='/home'"  style="width: 150px; background: #393e82; color: #fff; padding: 12px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; margin-top: 10px; margin-left: 20px;">
-            Home
-        </button>
-    <div style="width: 370px; margin: 70px auto; background: #fff; padding: 32px 28px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
-        <h2 style="text-align: center; color: #1a237e; margin-bottom: 25px;">Register</h2>
-        <form>
-            <label for="fullname" style="display: block; margin-bottom: 8px; color: #333;">Full Name</label>
-            <input type="text" id="fullname" name="fullname" style="width: 100%; padding: 10px; margin-bottom: 16px; border: 1px solid #bdbdbd; border-radius: 5px; font-size: 1em;">
-
-            <label for="email" style="display: block; margin-bottom: 8px; color: #333;">Email</label>
-            <input type="email" id="email" name="email" style="width: 100%; padding: 10px; margin-bottom: 16px; border: 1px solid #bdbdbd; border-radius: 5px; font-size: 1em;">
-
-            <label for="username" style="display: block; margin-bottom: 8px; color: #333;">Username</label>
-            <input type="text" id="username" name="username" style="width: 100%; padding: 10px; margin-bottom: 16px; border: 1px solid #bdbdbd; border-radius: 5px; font-size: 1em;">
-
-            <label for="password" style="display: block; margin-bottom: 8px; color: #333;">Password</label>
-            <input type="password" id="password" name="password" style="width: 100%; padding: 10px; margin-bottom: 22px; border: 1px solid #bdbdbd; border-radius: 5px; font-size: 1em;">
-
-            <label for="confirmpassword" style="display: block; margin-bottom: 8px; color: #333;">Confirm Password</label>
-            <input type="password" id="confirmpassword" name="confirmpassword" style="width: 100%; padding: 10px; margin-bottom: 22px; border: 1px solid #bdbdbd; border-radius: 5px; font-size: 1em;"> 
+    <title>Register - StudyTrack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --light-gray: #e5e7eb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(120deg, rgba(79, 70, 229, 0.03) 0%, rgba(79, 70, 229, 0.08) 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 15px 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Auth Container */
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .auth-subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--gray);
+        }
+        
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .message-error {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-card {
+                padding: 30px 20px;
+            }
             
-            <button type="submit" style="width: 100%; background: #3949ab; color: #fff; padding: 12px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer;">Register</button>
-        </form>
-        <p style="text-align: center; margin-top: 18px; color: #757575;">
-            Already have an account? <a href="/login" style="color: #3949ab; text-decoration: none;">Login</a>
-        </p>
+            .auth-title {
+                font-size: 1.5rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="/home" class="logo">
+                <i class="fas fa-graduation-cap logo-icon"></i>
+                <span>StudyTrack</span>
+            </a>
+            <a href="/home" class="btn btn-outline">Home</a>
+        </div>
+    </header>
+
+    <!-- Auth Container -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1 class="auth-title">Create Your Account</h1>
+                <p class="auth-subtitle">Join us to enhance your study experience</p>
+            </div>
+            
+            {% if messages %}
+            <div class="message message-error">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <form action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label class="form-label" for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname" class="form-input" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-input" placeholder="Choose a username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="Create a password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="confirmpassword">Confirm Password</label>
+                    <input type="password" id="confirmpassword" name="confirmpassword" class="form-input" placeholder="Confirm your password" required>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                Already have an account? <a href="/login">Login</a>
+            </div>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 StudyTrack | Empowering Students with AI-Powered Learning</p>
+        </div>
+    </footer>
 </body>
 </html>

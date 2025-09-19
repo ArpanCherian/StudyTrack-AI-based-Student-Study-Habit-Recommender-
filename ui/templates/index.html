@@ -2,268 +2,689 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>StudyTrack - AI Based Student Study Habit Recommender</title>
+    <title>StudyTrack - AI-Powered Study Habit Recommendation System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --light-gray: #e5e7eb;
+        }
+        
+        * {
             margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(120deg, #e0eaf6 0%, #f5f7fb 100%);
-            color: #333;
-        }
-        /* Navigation Bar */
-        .navbar {
-            background: #1a237e;
-            color: #fff;
             padding: 0;
-            box-shadow: 0 2px 8px rgba(26,35,126,0.08);
+            box-sizing: border-box;
         }
-        .navbar-content {
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
             max-width: 1200px;
-            margin: auto;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 30px;
+            padding: 18px 0;
         }
-        .navbar-title {
-            font-size: 2em;
-            font-weight: 600;
-            letter-spacing: 1px;
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
         }
-        .navbar-links a {
-            color: #fff;
+        
+        .logo-icon {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-links a {
             text-decoration: none;
-            margin-left: 18px;
-            font-size: 1em;
-            padding: 8px 22px;
-            border-radius: 6px;
-            border: 1px solid #fff;
-            transition: background 0.2s, color 0.2s;
-        }
-        .navbar-links a.register {
-            background: #3949ab;
-            border: none;
+            color: var(--dark);
             font-weight: 500;
+            transition: color 0.3s;
         }
-        .navbar-links a:hover {
-            background: #fff;
-            color: #1a237e;
+        
+        .nav-links a:hover {
+            color: var(--primary);
         }
-        .navbar-links a.register:hover {
-            background: #283593;
-            color: #fff;
+        
+        .btn {
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
         /* Hero Section */
         .hero {
-            background: linear-gradient(120deg, #e8eaf6 60%, #e3eafc 100%);
-            padding: 70px 20px 50px 20px;
-            text-align: center;
-            box-shadow: 0 2px 12px rgba(42,82,152,0.06);
+            padding: 100px 0;
+            background: linear-gradient(120deg, rgba(79, 70, 229, 0.03) 0%, rgba(79, 70, 229, 0.08) 100%);
+            position: relative;
+            overflow: hidden;
         }
+        
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .hero-text {
+            flex: 1;
+        }
+        
+        .hero-visual {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        
         .hero-title {
-            color: #1a237e;
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 18px;
-            letter-spacing: 1px;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--dark);
+            line-height: 1.2;
         }
+        
+        .hero-title span {
+            color: var(--primary);
+        }
+        
         .hero-desc {
-            font-size: 1.2em;
-            max-width: 700px;
-            margin: 0 auto 30px auto;
-            line-height: 1.7;
-            color: #3949ab;
-        }
-        .hero-btns {
-            margin-top: 18px;
-        }
-        .hero-btns a {
-            display: inline-block;
-            background: #3949ab;
-            color: #fff;
-            padding: 14px 36px;
-            margin: 0 10px;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 500;
-            text-decoration: none;
-            box-shadow: 0 2px 8px rgba(42,82,152,0.10);
-            transition: background 0.2s;
-        }
-        .hero-btns a:hover {
-            background: #1a237e;
-        }
-        /* Section Headings */
-        .section-title {
-            color: #1a237e;
-            text-align: center;
-            font-size: 2em;
-            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--gray);
             margin-bottom: 30px;
-            margin-top: 0;
+            max-width: 90%;
         }
-        /* About Section */
-        .about {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(42,82,152,0.07);
-            padding: 50px 30px;
-            max-width: 1000px;
-            margin: 40px auto;
+        
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
         }
-        .about p {
-            font-size: 1.13em;
-            line-height: 1.8;
-            text-align: justify;
-            margin-bottom: 18px;
+        
+        .hero-image {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        .about ul {
-            line-height: 2;
-            font-size: 1.08em;
-            margin-left: 24px;
+        
+        /* Section Common Styles */
+        .section {
+            padding: 80px 0;
         }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .section-title span {
+            color: var(--primary);
+        }
+        
+        .section-desc {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        /* How It Works Section */
+        .how-it-works {
+            background-color: white;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .step-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .step-number {
+            background-color: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto 20px;
+        }
+        
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .step-desc {
+            color: var(--gray);
+        }
+        
         /* Benefits Section */
         .benefits {
-            background: linear-gradient(120deg, #e3eafc 60%, #e8eaf6 100%);
-            padding: 60px 20px;
+            background: linear-gradient(120deg, rgba(79, 70, 229, 0.03) 0%, rgba(79, 70, 229, 0.08) 100%);
         }
-        .benefit-cards {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            max-width: 1000px;
-            margin: auto;
         }
+        
         .benefit-card {
-            background: #fff;
-            padding: 28px 22px;
+            background: white;
             border-radius: 12px;
-            width: 290px;
-            box-shadow: 0 2px 10px rgba(42,82,152,0.10);
-            text-align: center;
-            transition: transform 0.18s;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
         }
+        
         .benefit-card:hover {
-            transform: translateY(-6px) scale(1.03);
-            box-shadow: 0 6px 18px rgba(42,82,152,0.13);
+            transform: translateY(-5px);
         }
-        .benefit-card h3 {
-            color: #3949ab;
-            font-size: 1.25em;
+        
+        .benefit-icon {
+            background-color: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .benefit-desc {
+            color: var(--gray);
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            background-color: white;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .author-info h4 {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(120deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .cta-desc {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .cta-btns {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .btn-light {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .btn-light:hover {
+            background-color: var(--light);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-links {
+            list-style-type: none;
+        }
+        
+        .footer-links li {
             margin-bottom: 12px;
         }
-        .benefit-card p {
-            color: #333;
-            font-size: 1.07em;
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
         }
-        /* Footer */
-        .footer {
-            background: #1a237e;
-            color: #fff;
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
             text-align: center;
-            padding: 18px 0;
-            font-size: 1em;
-            margin-top: 40px;
-            letter-spacing: 1px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
         }
-        /* Responsive */
-        @media (max-width: 900px) {
-            .navbar-content, .about, .benefit-cards {
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero-content {
                 flex-direction: column;
-                align-items: stretch;
-                padding: 18px 10px;
             }
-            .benefit-cards {
-                gap: 18px;
-            }
-            .benefit-card {
-                width: 100%;
-                max-width: 350px;
-                margin: auto;
+            
+            .hero-title {
+                font-size: 2.5rem;
             }
         }
-        @media (max-width: 600px) {
-            .navbar-title {
-                font-size: 1.2em;
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
             }
+            
             .hero-title {
-                font-size: 1.5em;
+                font-size: 2rem;
             }
+            
             .section-title {
-                font-size: 1.3em;
+                font-size: 1.8rem;
             }
-            .about, .benefits {
-                padding: 25px 8px;
+            
+            .cta-title {
+                font-size: 2rem;
+            }
+            
+            .cta-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-title">
-                StudyTrack
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap logo-icon"></i>
+                <span>StudyTrack</span>
             </div>
-            <div class="navbar-links">
-                <a href="/login">Login</a>
-                <a href="/register" class="register">Register</a>
+            <div class="nav-links">
+                <a href="#how-it-works">How It Works</a>
+                <a href="#benefits">Benefits</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="/login" class="btn btn-outline">Login</a>
+                <a href="/register" class="btn btn-primary">Register</a>
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-title">Smarter Learning with AI</div>
-        <div class="hero-desc">
-            StudyTrack empowers students to improve their study habits by analyzing learning patterns, recommending personalized study schedules, and providing actionable insights powered by AI.<br>
-            <span style="color:#283593;">Make your study time more efficient, focused, and stress-free.</span>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Transform Your <span>Study Habits</span> with AI-Powered Recommendations</h1>
+                <p class="hero-desc">
+                    Students often struggle to find effective study routines tailored to their learning patterns, attention span, and engagement style. StudyTrack analyzes your behavior to recommend personalized study habits that actually work.
+                </p>
+                
+                <div class="hero-btns">
+                    <a href="/register" class="btn btn-primary">Get Started for Free</a>
+                    <a href="#how-it-works" class="btn btn-outline">Learn More</a>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Student studying with laptop" class="hero-image">
+            </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="about">
-        <h2 class="section-title">About the Project</h2>
-        <p>
-            <b>StudyTrack AI Recommender</b> is designed to support students in their academic journey by identifying study patterns and suggesting strategies tailored to individual needs. Using advanced machine learning, it adapts to your progress and provides real-time recommendations that help you:
-        </p>
-        <ul>
-            <li>Optimize your daily and weekly study schedules.</li>
-            <li>Track focus levels and recommend breaks for better productivity.</li>
-            <li>Suggest personalized learning techniques (flashcards, summaries, practice tests).</li>
-            <li>Monitor progress and highlight areas needing improvement.</li>
-        </ul>
+    <!-- How It Works Section -->
+    <section class="section how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How <span>StudyTrack</span> Works</h2>
+            <p class="section-desc">
+                Our AI-powered system analyzes your study patterns to deliver personalized recommendations that improve your learning efficiency.
+            </p>
+            
+            <div class="steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Track Your Study Habits</h3>
+                    <p class="step-desc">Log your study sessions, attention span, quiz scores, and learning methods in our simple interface.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">AI Analysis</h3>
+                    <p class="step-desc">Our machine learning algorithms analyze your patterns to identify what works best for you.</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Get Personalized Recommendations</h3>
+                    <p class="step-desc">Receive tailored suggestions for study durations, methods, break patterns, and optimal learning times.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Benefits Section -->
-    <section class="benefits">
-        <h2 class="section-title">How It Helps Students</h2>
-        <div class="benefit-cards">
-            <div class="benefit-card">
-                <h3>Personalized Plans</h3>
-                <p>AI generates study schedules that match your learning style and pace.</p>
+    <section class="section benefits" id="benefits">
+        <div class="container">
+            <h2 class="section-title">Why Use <span>StudyTrack</span></h2>
+            <p class="section-desc">
+                Our AI-powered recommendation system helps students study more effectively and efficiently.
+            </p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="benefit-title">Personalized Study Plans</h3>
+                    <p class="benefit-desc">Get recommendations tailored to your unique learning patterns, attention span, and engagement style.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="benefit-title">Improved Academic Performance</h3>
+                    <p class="benefit-desc">Students using our system show measurable improvement in test scores and knowledge retention.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="benefit-title">Efficient Time Usage</h3>
+                    <p class="benefit-desc">Spend less time studying while achieving better results through optimized study patterns.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="benefit-title">Reduced Stress</h3>
+                    <p class="benefit-desc">Eliminate guesswork and anxiety about study methods with data-driven recommendations.</p>
+                </div>
             </div>
-            <div class="benefit-card">
-                <h3>Better Focus</h3>
-                <p>Track study patterns and receive reminders for breaks to avoid burnout.</p>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials" id="testimonials">
+        <div class="container">
+            <h2 class="section-title">What <span>Students Say</span></h2>
+            <p class="section-desc">
+                Hear from students who have transformed their study habits with StudyTrack.
+            </p>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"StudyTrack completely changed how I approach studying. The personalized recommendations helped me identify my most productive hours and the best methods for retaining information."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">S</div>
+                        <div class="author-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Computer Science Student</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"I was struggling with focus and retention until I started using StudyTrack. The break pattern suggestions alone have made a huge difference in my study sessions."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">M</div>
+                        <div class="author-info">
+                            <h4>Michael Chen</h4>
+                            <p>Medical Student</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"As a working student, I have limited time to study. StudyTrack helped me optimize my schedule and study methods, resulting in better grades with less time spent studying."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">J</div>
+                        <div class="author-info">
+                            <h4>Jessica Williams</h4>
+                            <p>Business Administration</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="benefit-card">
-                <h3>Progress Insights</h3>
-                <p>Visual reports on your study habits and areas for improvement.</p>
-            </div>
-            <div class="benefit-card">
-                <h3>Motivation & Support</h3>
-                <p>Stay motivated with tips, reminders, and encouragement tailored to your journey.</p>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="cta-title">Ready to Transform Your Study Habits?</h2>
+            <p class="cta-desc">
+                Join thousands of students who are already using StudyTrack to improve their academic performance with AI-powered recommendations.
+            </p>
+            <div class="cta-btns">
+                <a href="/register" class="btn btn-light">Get Started Now</a>
+                <a href="#how-it-works" class="btn btn-outline" style="background: transparent; color: white; border: 2px solid white;">Learn More</a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        &copy; 2025 StudyTrack | Empowering Students with AI
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>StudyTrack</h3>
+                    <p>AI-powered study habit recommendations based on student behavior analysis.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Study Tips</a></li>
+                        <li><a href="#">Research</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:info@studytrack.com">info@studytrack.com</a></li>
+                        <li><a href="#">Support Center</a></li>
+                        <li><a href="#">Feedback</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 StudyTrack | Empowering Students with AI-Powered Learning</p>
+            </div>
+        </div>
     </footer>
-
 </body>
 </html>
