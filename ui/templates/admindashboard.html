@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard - StudyTrack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --accent: #f59e0b;
+            --sidebar-width: 260px;
+        }
+        html, body { height: 100%; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            background: var(--primary);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sidebar-header, .sidebar-footer { padding: 20px; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white;
+            text-decoration: none;
+        }
+        .sidebar-nav { flex: 1; }
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e0e0fd;
+            text-decoration: none;
+            border-left: 4px solid transparent;
+        }
+        .nav-item.active,.nav-item:hover { background: rgba(255,255,255,0.1); color: #fff; border-left-color: var(--accent);}
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .user-avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 1.2rem;
+        }
+        .logout-btn {
+            display: block;
+            width: 90%;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover { background: rgba(255,255,255,0.2); }
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: #fff;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .btn-new-student {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-new-student:hover { background: var(--accent); color: var(--primary); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+        th, td {
+            text-align: left;
+            padding: 16px 14px;
+            border-bottom: 1.5px solid #e5e7eb;
+            font-size: 1rem;
+        }
+        th { background: #f7f9fc; font-weight: 700; }
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.93rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .status-ongoing { background: #ede9fe; color: #6d28d9; }
+        .status-completed { background: #d1fae5; color: #059669; }
+        .status-not-started { background: #f3f4f6; color: #6b7280; }
+        @media (max-width: 900px) {
+            .main-content { padding: 18px; }
+            .sidebar { width: 70px; min-width: 70px; }
+            .sidebar-header span, .sidebar-nav span, .user-details { display: none; }
+        }
+        @media (max-width: 700px) {
+            .sidebar { display: none; }
+            .main-content { padding: 7vw; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div>
+                <div class="sidebar-header">
+                    <a href="#" class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>StudyTrack</span>
+                    </a>
+                </div>
+                <div class="sidebar-nav">
+                    <a href="/admindashboard" class="nav-item active">
+                        <i class="fas fa-home"></i><span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item"><i class="fas fa-book"></i><span>Study Sessions</span></a>
+                    <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">{{ username|first|upper }}</div>
+                    <div class="user-details">
+                        <div class="user-name">{{ username }}</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+                <a href="/logout" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+        <div class="main-content">
+            {% if messages %}
+            <div class="message" style="background:#d1fae5; color:#065f46; border:1px solid #a7f3d0; padding:12px; border-radius:6px; margin-bottom:20px; text-align:center;">
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="page-header">
+                <span style="font-size:2rem;font-weight:700;">Admin Dashboard</span>
+                <button class="btn-new-student" onclick="window.location.href='/newstudent'">
+                    <i class="fas fa-user-plus"></i> New Student
+                </button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Course Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Hours Spent</th>
+                        <th>Completion</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.studentname }}</td>
+                        <td>{{ student.coursename }}</td>
+                        <td>{{ student.startdate }}</td>
+                        <td>{{ student.enddate }}</td>
+                        <td>{{ student.hoursspent }} hrs</td>
+                        <td>{{ student.completion }}% Complete</td>
+                        <td>
+                            {% if student.status == 'Ongoing' %}
+                            <span class="status-badge status-ongoing">Ongoing</span>
+                            {% elif student.status == 'Completed' %}
+                            <span class="status-badge status-completed">Completed</span>
+                            {% else %}
+                            <span class="status-badge status-not-started">Not Started</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="text-align:center;">No student data available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
