@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from .models import userdetails as register
+from .models import admindetails as adminregister
 from .models import studentdetails
 
 # Create your views here.
@@ -110,17 +111,17 @@ def admindashboard(request):
 
 def adminlogin_view(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST['adminusername']
+        password = request.POST['adminpassword']
  
         try:
-            user = register.objects.get(username=username, password=password)
+            user = adminregister.objects.get(adminusername=username, adminpassword=password)
             request.session['user_id'] = user.id
-            request.session['username'] = user.username
+            request.session['username'] = user.adminusername
  
-            messages.success(request, f"Wellcome {user.username} !")
+            messages.success(request, f"Wellcome {user.adminusername} !")
             return redirect('admindashboard')
-        except register.DoesNotExist:
+        except adminregister.DoesNotExist:
             messages.error(request, "Invalid username or password")
             return redirect('adminlogin')
  

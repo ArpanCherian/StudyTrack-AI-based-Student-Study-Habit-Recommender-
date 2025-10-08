@@ -7,6 +7,14 @@ class userdetails(models.Model):
     username = models.CharField(max_length=20)
     password = models.CharField(max_length=16)
 
+
+class admindetails(models.Model):
+    adminfullname = models.CharField(max_length=30)
+    adminemail = models.EmailField(max_length=30)
+    adminusername = models.CharField(max_length=20)
+    adminpassword = models.CharField(max_length=16)
+
+
 class studentdetails(models.Model):
     studentname = models.CharField(max_length=30)
     coursename = models.CharField(max_length=30)

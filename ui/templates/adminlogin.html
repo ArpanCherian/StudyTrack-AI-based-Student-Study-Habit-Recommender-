@@ -239,23 +239,19 @@
             <form action="{% url 'adminlogin' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label class="form-label" for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-input" placeholder="Enter your username">
+                    <label class="form-label" for="adminusername">Username</label>
+                    <input type="text" id="adminusername" name="adminusername" class="form-input" placeholder="Enter your username">
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label" for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password">
+                    <label class="form-label" for="adminpassword">Password</label>
+                    <input type="adminpassword" id="adminpassword" name="adminpassword" class="form-input" placeholder="Enter your password">
                 </div>
                 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
                 </div>
             </form>
-            
-            <div class="auth-footer">
-                Don't have an account? <a href="/register">Register</a>
-            </div>
         </div>
     </div>
 
