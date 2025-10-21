@@ -14,4 +14,7 @@ urlpatterns = [
     path('newstudent/', views.newstudent_view, name='newstudent'),
     path('add_student_view/', views.add_student_view, name='addstudent'),
     path('studentcourses/', views.studentcourses, name='studentcourses'),
+    path('ongoing_course/', views.ongoing_course, name='ongoing_course'),
+    path('send_course_reminder/', views.send_course_reminder, name='send_course_reminder'),
+    path('usernotification/', views.usernotification, name='usernotification'),
 ]
