@@ -9,6 +9,49 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import studentdetails, userdetails
 from .models import Notification
+from django.utils import timezone
+
+
+
+# At the top of views.py
+COURSES = [
+    {
+        'name': 'Cybersecurity',
+        'description': 'Computer security (also cybersecurity, digital security, or information technology (IT) security) is a subdiscipline within the field of information security.',
+        'duration': '6 months',
+        'image': 'cybersecurity.webp'
+    },
+    {
+        'name': 'Data Analytics',
+        'description': 'Fundamentals of classical mechanics and motion to build strong basics.',
+        'duration': '4 months',
+        'image': 'data analytics.webp'
+    },
+    {
+        'name': 'Computer Science - Python',
+        'description': 'Learn Python programming fundamentals and advance to web development.',
+        'duration': '3 months',
+        'image': 'python.webp'
+    },
+    {
+        'name': 'Web Development',
+        'description': 'Study organic compounds, reactions, and mechanisms in this comprehensive course.',
+        'duration': '5 months',
+        'image': 'Web Development.webp'
+    },
+    {
+        'name': 'Blockchain',
+        'description': 'Explore classic and contemporary literature and improve your critical thinking.',
+        'duration': '4 months',
+        'image': 'Blockchain.webp'
+    },
+    {
+        'name': 'Cloud Computing',
+        'description': 'Understand the fundamentals of genetics and heredity in this detailed course.',
+        'duration': '4 months',
+        'image': 'cloud Computing.webp'
+    }
+]
 
 # Create your views here.
 
@@ -36,8 +79,7 @@ def studysessions(request):
     })
 
 
-def studentcourses(request):
-    return render(request, 'studentcourse.html')
+
 
 
 def newstudent_view(request):
@@ -224,3 +266,88 @@ def usernotification(request):
     })
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Course, studentdetails, userdetails, Quiz
+from django.utils import timezone
+
+def studentcourses(request):
+    if 'username' not in request.session:
+        return redirect('login')
+
+    username = request.session['username']
+    user = userdetails.objects.get(username=username)
+
+    # Get courses enrolled (admin or by student) - use fullname (your model fields)
+    enrolled_names = set(studentdetails.objects.filter(studentname=user.fullname).values_list('coursename', flat=True))
+
+    # Mark enrollment state for every course
+    courses = []
+    for course in COURSES:
+        course_copy = course.copy()
+        course_copy['enrolled'] = course['name'] in enrolled_names
+        courses.append(course_copy)
+
+    return render(request, 'studentcourse.html', {'courses': courses, 'user': user})
+
+
+def enroll_course(request, coursename):
+    if 'username' not in request.session:
+        messages.error(request, "You must log in to enroll in a course.")
+        return redirect('login')
+
+    username = request.session['username']
+    user = get_object_or_404(userdetails, username=username)
+
+    # Prevent duplicate enrollments
+    if studentdetails.objects.filter(studentname=user.username, coursename=coursename).exists():
+        messages.info(request, f"You are already enrolled in {coursename}.")
+        return redirect('allcourse', coursename=coursename)
+
+    # Create studentdetails entry to register enrollment
+    studentdetails.objects.create(
+        studentname=user.username,
+        coursename=coursename,
+        startdate=timezone.now().date(),
+        enddate=timezone.now().date().replace(
+            month=timezone.now().month + 3) if timezone.now().month < 10 else timezone.now().date().replace(
+            year=timezone.now().year + 1, month=(timezone.now().month + 3) % 12),
+        hoursspent=0,
+        completion=0,
+        status='Ongoing',
+    )
+    messages.success(request, f"You have successfully enrolled in {coursename}!")
+    return redirect('allcourse', coursename=coursename)
+
+
+def allcourse(request, coursename):
+    if 'username' not in request.session:
+        messages.error(request, "Please login to view the course details.")
+        return redirect('login')
+
+    username = request.session['username']
+    user = userdetails.objects.get(username=username)
+
+    enrolled = studentdetails.objects.filter(studentname=user.fullname, coursename=coursename).first()
+    all_enrollments = studentdetails.objects.filter(coursename=coursename)
+    total_students = all_enrollments.count()
+    completed = all_enrollments.filter(status='Completed').count()
+    completion_rate = round((completed / total_students) * 100, 2) if total_students > 0 else 0
+
+    # Find current course details
+    course_info = next((c for c in COURSES if c['name'] == coursename), None)
+    if course_info is None:
+        messages.error(request, "Course not found.")
+        return redirect('studentcourses')
+
+    context = {
+        'coursename': coursename,
+        'description': course_info['description'],
+        'duration': course_info['duration'],
+        'courseimage': course_info['image'],
+        'total_students': total_students,
+        'completed': completed,
+        'completion_rate': completion_rate,
+        'enrolled': enrolled,
+    }
+    return render(request, 'allcourse.html', context)

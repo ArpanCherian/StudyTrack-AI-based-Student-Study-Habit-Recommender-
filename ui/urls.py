@@ -17,4 +17,7 @@ urlpatterns = [
     path('ongoing_course/', views.ongoing_course, name='ongoing_course'),
     path('send_course_reminder/', views.send_course_reminder, name='send_course_reminder'),
     path('usernotification/', views.usernotification, name='usernotification'),
+    path('studentcourses/', views.studentcourses, name='studentcourses'),
+    path('course/<str:coursename>/', views.allcourse, name='allcourse'),
+    path('course/<str:coursename>/enroll/', views.enroll_course, name='enroll_course'),
 ]

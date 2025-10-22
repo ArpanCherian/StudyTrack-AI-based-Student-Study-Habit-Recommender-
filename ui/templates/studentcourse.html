@@ -1,12 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <title>Courses - StudyTrack</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
     <style>
         :root {
             --primary: #4f46e5;
@@ -20,11 +22,13 @@
             --light-gray: #e5e7eb;
             --sidebar-width: 260px;
         }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
@@ -33,6 +37,7 @@
             min-height: 100vh;
             display: flex;
         }
+
         .sidebar {
             width: var(--sidebar-width);
             background: var(--primary);
@@ -47,11 +52,13 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             z-index: 100;
         }
+
         .sidebar-header {
             padding: 0 20px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 20px;
         }
+
         .logo {
             display: flex;
             align-items: center;
@@ -61,13 +68,16 @@
             color: white;
             text-decoration: none;
         }
+
         .logo-icon {
             color: white;
             font-size: 1.5rem;
         }
+
         .sidebar-nav {
             flex: 1;
         }
+
         .nav-item {
             padding: 12px 20px;
             display: flex;
@@ -78,26 +88,31 @@
             transition: all 0.3s;
             border-left: 4px solid transparent;
         }
+
         .nav-item:hover,
         .nav-item.active {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border-left-color: var(--accent);
         }
+
         .nav-item i {
             width: 20px;
             text-align: center;
         }
+
         .sidebar-footer {
             padding: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .user-info {
             display: flex;
             align-items: center;
             gap: 12px;
             margin-bottom: 20px;
         }
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -108,17 +123,21 @@
             justify-content: center;
             font-weight: 600;
         }
+
         .user-details {
             flex: 1;
         }
+
         .user-name {
             font-weight: 600;
             font-size: 0.9rem;
         }
+
         .user-role {
             font-size: 0.8rem;
             opacity: 0.8;
         }
+
         .logout-btn {
             display: block;
             width: 100%;
@@ -132,9 +151,11 @@
             transition: all 0.3s;
             text-decoration: none;
         }
+
         .logout-btn:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -142,26 +163,31 @@
             background: white;
             min-height: 100vh;
         }
+
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
         }
+
         .page-title {
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--dark);
         }
+
         .date-display {
             color: var(--gray);
             font-size: 1rem;
         }
+
         .courses-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 25px;
         }
+
         .course-card {
             background: white;
             border-radius: 12px;
@@ -171,15 +197,18 @@
             display: flex;
             flex-direction: column;
         }
+
         .course-card:hover {
             box-shadow: 0 12px 30px rgba(79, 70, 229, 0.2);
         }
+
         .course-image {
             width: 100%;
             height: 160px;
             object-fit: cover;
             border-bottom: 5px solid var(--primary);
         }
+
         .course-content {
             padding: 20px;
             flex: 1;
@@ -187,28 +216,33 @@
             flex-direction: column;
             justify-content: space-between;
         }
+
         .course-name {
             font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 8px;
             color: var(--primary);
         }
+
         .course-description {
             font-size: 0.95rem;
             color: var(--dark);
             margin-bottom: 16px;
             flex-grow: 1;
         }
+
         .course-duration {
             font-weight: 600;
             color: var(--accent);
             font-size: 0.9rem;
         }
+
         @media (max-width: 900px) {
             .courses-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
         @media (max-width: 600px) {
             .courses-grid {
                 grid-template-columns: 1fr;
@@ -216,6 +250,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
@@ -265,55 +300,23 @@
             <div class="date-display" id="current-date"></div>
         </div>
         <div class="courses-grid">
-            <!-- Repeat below for each course -->
-            <div class="course-card">
-                <img src="{% static 'images/cybersecurity.webp' %}" alt="cybersecurity" class="course-image" />
-                <div class="course-content">
-                    <div class="course-name">Cybersecurity</div>
-                    <div class="course-description">Computer security (also cybersecurity, digital security, or information technology (IT) security) is a subdiscipline within the field of information security.</div>
-                    <div class="course-duration">Duration: 6 months</div>
+            {% for course in courses %}
+            <a href="{% url 'allcourse' course.name %}" style="text-decoration:none; color:inherit;">
+                <div class="course-card" style="opacity:1;">
+                    <img src="{% static 'images/'|add:course.image %}" alt="{{ course.name }}" class="course-image" />
+                    <div class="course-content">
+                        <div class="course-name">{{ course.name }}</div>
+                        <div class="course-description">{{ course.description|truncatechars:80 }}</div>
+                        <div class="course-duration">Duration: {{ course.duration }}</div>
+                        {% if course.enrolled %}
+                        <div style="margin-top:10px; color: #10b981;">Already Enrolled</div>
+                        {% else %}
+                        <div style="margin-top:10px; color:#4f46e5;">Available for Enrollment</div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-            <div class="course-card">
-                <img src="{% static 'images/data analytics.webp' %}" alt="Data analytics" class="course-image" />
-                <div class="course-content">
-                    <div class="course-name">Data Analytics</div>
-                    <div class="course-description">Fundamentals of classical mechanics and motion to build strong basics.</div>
-                    <div class="course-duration">Duration: 4 months</div>
-                </div>
-            </div>
-            <div class="course-card">
-                <img src="{% static 'images/python.webp' %}" alt="Python" class="course-image" />
-                <div class="course-content">
-                    <div class="course-name">Computer Science - Python</div>
-                    <div class="course-description">Learn Python programming fundamentals and advance to web development.</div>
-                    <div class="course-duration">Duration: 3 months</div>
-                </div>
-            </div>
-            <div class="course-card">
-                <img src="{% static 'images/Web Development.webp' %}" alt="Web Development" class="course-image" />
-                <div class="course-content">
-                    <div class="course-name">Web Development</div>
-                    <div class="course-description">Study organic compounds, reactions, and mechanisms in this comprehensive course.</div>
-                    <div class="course-duration">Duration: 5 months</div>
-                </div>
-            </div>
-            <div class="course-card">
-                <img src="{% static 'images/Blockchain.webp' %}" alt="Blockchain" class="course-image" />
-                <div class="course-content">
-                    <div class="course-name">Blockchain</div>
-                    <div class="course-description">Explore classic and contemporary literature and improve your critical thinking.</div>
-                    <div class="course-duration">Duration: 4 months</div>
-                </div>
-            </div>
-            <div class="course-card">
-                <img src="{% static 'images/cloud Computing.webp' %}" alt="Cloud Computing" class="course-image" />
-                <div class="course-content">
-                    <div class="course-name">Cloud Computing</div>
-                    <div class="course-description">Understand the fundamentals of genetics and heredity in this detailed course.</div>
-                    <div class="course-duration">Duration: 4 months</div>
-                </div>
-            </div>
+            </a>
+            {% endfor %}
         </div>
     </div>
     <script>
@@ -324,4 +327,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ coursename }} - Course Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font and Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            margin: 0;
+            padding: 0;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+
+        .course-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .course-header img {
+            width: 180px;
+            height: 120px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .course-title {
+            font-size: 2rem;
+            color: #4f46e5;
+            font-weight: 700;
+        }
+
+        .course-description {
+            color: #374151;
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            border-radius: 8px;
+            background: #eef2ff;
+            padding: 20px;
+        }
+
+        .stats div {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stats h2 {
+            color: #4f46e5;
+            margin-bottom: 4px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #4f46e5;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #4338ca;
+        }
+
+        .quiz-section {
+            margin-top: 40px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .quiz-section h3 {
+            color: #4f46e5;
+            margin-bottom: 10px;
+        }
+
+        .quiz-section p {
+            color: #4b5563;
+            margin-bottom: 20px;
+        }
+
+        .back {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            color: #4b5563;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="container">
+    {% if messages %}
+        <div class="message" style="background:#d1fae5; color:#065f46; border:1px solid #a7f3d0; padding:12px; border-radius:6px; margin-bottom:20px; text-align:center;">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    <div class="course-header">
+        <img src="{% static 'images/'|add:courseimage %}" alt="{{ coursename }}">
+        <div>
+            <h1 class="course-title">{{ coursename }}</h1>
+            <p class="course-description">{{ description }}</p>
+            <p><strong>Duration:</strong> {{ duration }}</p>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div><h2>{{ total_students }}</h2><p>Students Enrolled</p></div>
+        <div><h2>{{ completed }}</h2><p>Completed</p></div>
+        <div><h2>{{ completion_rate }}%</h2><p>Completion Rate</p></div>
+    </div>
+
+    {% if enrolled %}
+        <div style="margin:20px 0; color: #10b981;">You are enrolled in this course.</div>
+        <div class="quiz-section">
+            <!-- Add your quiz logic or Quiz button here -->
+        </div>
+    {% else %}
+        <div style="text-align:center; margin:20px 0;">
+            <a href="{% url 'enroll_course' coursename %}" class="btn">Enroll Now</a>
+        </div>
+    {% endif %}
+
+    <a href="{% url 'studentcourses' %}" class="back"><i class="fas fa-arrow-left"></i> Back to Courses</a>
+</div>
+</body>
+</html>
