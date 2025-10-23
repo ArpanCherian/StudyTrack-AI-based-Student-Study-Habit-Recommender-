@@ -66,17 +66,28 @@ def studysessions(request):
         return redirect('login')
 
     username = request.session.get('username')
+    user = userdetails.objects.get(username=username)
 
-    # Assuming studentname corresponds to the logged-in user
+    # All courses the student is enrolled in
+    enrolled_courses = studentdetails.objects.filter(studentname=user.username).values_list('coursename', flat=True)
+    
+    # Collect list of incompleted quizzes per course
+    incomplete_quizzes = []
+    for coursename in enrolled_courses:
+        attempt = QuizAttempt.objects.filter(student=user, coursename=coursename, completed=True).first()
+        quiz_exists = Quiz.objects.filter(course__name=coursename).exists()
+        if not attempt and quiz_exists:
+            incomplete_quizzes.append(coursename)
+
     user_student_records = studentdetails.objects.filter(studentname=username)
 
-    # Pass user student records as both study_sessions and courses (since you have only studentdetails model)
     return render(request, 'studysession.html', {
         'username': username,
-        # can map course_name, date, duration accordingly in template
         'study_sessions': user_student_records,
         'courses': user_student_records,
+        'incomplete_quizzes': incomplete_quizzes
     })
+
 
 
 
@@ -351,3 +362,51 @@ def allcourse(request, coursename):
         'enrolled': enrolled,
     }
     return render(request, 'allcourse.html', context)
+
+
+
+
+from .models import Quiz, QuizAttempt, userdetails, studentdetails
+
+def take_quiz(request, coursename):
+    if 'username' not in request.session:
+        return redirect('login')
+    username = request.session['username']
+    user = userdetails.objects.get(username=username)
+
+    # Prevent retake if already completed
+    attempt = QuizAttempt.objects.filter(student=user, coursename=coursename, completed=True).first()
+    if attempt:
+        messages.info(request, "Quiz already completed for this course.")
+        return render(request, 'quiz_completed.html', {'score': attempt.score})
+
+    quizzes = Quiz.objects.filter(course__name=coursename)
+    if request.method == "POST":
+        correct = 0
+        total = quizzes.count()
+        for quiz in quizzes:
+            selected = request.POST.get(f"quiz_{quiz.id}")
+            if selected == quiz.correct_answer:
+                correct += 1
+        score = int((correct / total) * 100) if total else 0
+
+        # Save quiz attempt
+        QuizAttempt.objects.update_or_create(
+            student=user, coursename=coursename,
+            defaults={'score': score, 'completed': True}
+        )
+
+        # Mark studentdetails as complete (optional)
+        student = studentdetails.objects.filter(studentname=user.fullname, coursename=coursename).first()
+        if student and student.status != 'Completed':
+            student.status = 'Completed'
+            student.completion = 100
+            student.save()
+
+        return render(request, 'quiz_completed.html', {'score': score})
+
+    context = {
+        'coursename': coursename,
+        'quizzes': quizzes,
+    }
+    return render(request, 'quiz.html', context)

@@ -20,4 +20,6 @@ urlpatterns = [
     path('studentcourses/', views.studentcourses, name='studentcourses'),
     path('course/<str:coursename>/', views.allcourse, name='allcourse'),
     path('course/<str:coursename>/enroll/', views.enroll_course, name='enroll_course'),
+    path('quiz/<str:coursename>/', views.take_quiz, name='take_quiz'),
+
 ]

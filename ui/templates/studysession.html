@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        .modal { position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(54, 57, 102, 0.1);}
         :root {
             --primary: #4f46e5;
             --primary-light: #6366f1;
@@ -513,6 +514,28 @@
 </head>
 
 <body>
+    {% if incomplete_quizzes %}
+    <div id="quizReminderModal" class="modal" style="display:none;">
+        <div class="modal-content"
+            style="background:white; padding:30px; border-radius:12px; box-shadow:0 4px 18px #4338ca20; width:350px; margin:140px auto; position:relative;">
+            <span id="quizModalClose"
+                style="position:absolute; top:10px; right:20px; font-size:24px; cursor:pointer;">&times;</span>
+            <h3 style="color:#4f46e5;">Quiz Reminder</h3>
+            <p>You have not completed the quiz for:
+            <ul style="list-style: disc; padding-left: 20px;">
+                {% for course in incomplete_quizzes %}
+                    <li style="margin-bottom:18px; display: flex; align-items: center;">
+                     <span style="font-weight:600;">{{ course }}</span>
+                        <a class="btn btn-primary"
+                        href="{% url 'take_quiz' course %}" style="margin-left:18px; font-size:1.02rem; padding:10px 28px;">Take Quiz</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -572,17 +595,6 @@
             <h1 class="page-title">Study Sessions</h1>
             <div class="date-display" id="current-date">{{ current_date }}</div>
         </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button class="btn btn-primary">
-                <i class="fas fa-plus"></i> Log New Session
-            </button>
-            <button class="btn btn-outline">
-                <i class="fas fa-download"></i> Export Data
-            </button>
-        </div>
-
         <!-- Study Sessions Table -->
         <div class="sessions-section">
             <h2 class="section-title">
@@ -595,8 +607,7 @@
                         <th>Date</th>
                         <th>Duration</th>
                         <th>Focus Score</th>
-                        <th>Quiz Score</th>
-                        <th>Actions</th>
+                        <th>Quiz</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -610,16 +621,13 @@
                         <td class="session-duration">{{ session.hoursspent }}</td>
                         <td>
                             <div class="progress-container">
-                                <div class="progress-bar" data-completion="{{ session.completion|default:0|floatformat:0 }}"></div>
+                                <div class="progress-bar"
+                                    data-completion="{{ session.completion|default:0|floatformat:0 }}"></div>
                             </div>
-                            <div class="progress-text">{{ session.focus_score }}% Focus</div>
+                            <div class="progress-text">{{ session.completion|default:0|floatformat:0 }}% Focus</div>
                         </td>
-                        <td class="session-score">{{ session.quiz_score }}%</td>
                         <td>
-                            <div class="session-actions">
-                                <button class="action-btn edit-btn">Edit</button>
-                                <button class="action-btn delete-btn">Delete</button>
-                            </div>
+                            <a href="{% url 'take_quiz' session.coursename %}" class="btn btn-primary">Take Quiz</a>
                         </td>
                     </tr>
                     {% empty %}
@@ -638,13 +646,6 @@
                 <h2 class="section-title">
                     <i class="fas fa-book-open"></i> My Courses
                 </h2>
-                <div class="course-filter">
-                    <select class="form-input" style="width: auto; padding: 8px 12px;">
-                        <option>All Courses</option>
-                        <option>Ongoing</option>
-                        <option>Completed</option>
-                    </select>
-                </div>
             </div>
             <table class="courses-table">
                 <thead>
@@ -669,11 +670,12 @@
                         <td>{{ course.hoursspent }} hrs</td>
                         <td>
                             <div class="progress-container">
-                                <div class="progress-bar" data-completion="{{ course.completion|default:0|floatformat:0 }}"></div>
+                                <div class="progress-bar"
+                                    data-completion="{{ course.completion|default:0|floatformat:0 }}"></div>
                             </div>
                             <div class="progress-text">{{ course.completion }}% Complete</div>
                         </td>
-                        <td><span class="status-badge status-{{ course.status|lower|cut:" " }}">{{ course.status }}</span></td>
+                        <td><span class="status-badge status-{{ course.status|lower|cut:" " }}">{{course.status}}</span></td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -696,6 +698,24 @@
             document.querySelector('.sidebar').style.display = 'block';
             document.querySelector('.sidebar').style.width = '260px';
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var modal = document.getElementById("quizReminderModal");
+            var closeBtn = document.getElementById("quizModalClose");
+            if (modal) {
+                modal.style.display = "block";
+                closeBtn.onclick = function () { modal.style.display = "none"; }
+                window.onclick = function (event) {
+                    if (event.target == modal) { modal.style.display = "none"; }
+                }
+            }
+        });
+        // Progress Bar Animation
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            const completion = bar.getAttribute('data-completion');
+            bar.style.width = completion + '%';
+        });
+
     </script>
 </body>
 

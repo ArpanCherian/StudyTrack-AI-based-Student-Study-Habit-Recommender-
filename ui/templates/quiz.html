@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ coursename }} Quiz</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f4f6fa; }
+        .quiz-container { width: 90%; max-width: 700px; margin: 40px auto; background: #fff; border-radius: 12px; padding: 32px; box-shadow: 0 0 10px rgba(60,60,120,0.13); }
+        h2 { color: #463ea1; }
+        .question { margin-bottom: 22px; }
+        .options label { margin-right: 16px; }
+        .btn { background: #4f46e5; color:white; border:none; padding:12px 32px; border-radius:7px; font-size:1rem; font-weight:600; }
+    </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2>{{ coursename }} Quiz</h2>
+    <form method="post">{% csrf_token %}
+        {% for quiz in quizzes %}
+            <div class="question">
+                <p><strong>Q{{ forloop.counter }}:</strong> {{ quiz.question }}</p>
+                <div class="options">
+                    <label><input type="radio" name="quiz_{{ quiz.id }}" value="{{ quiz.option_a }}" required/> {{ quiz.option_a }}</label><br/>
+                    <label><input type="radio" name="quiz_{{ quiz.id }}" value="{{ quiz.option_b }}"/> {{ quiz.option_b }}</label><br/>
+                    <label><input type="radio" name="quiz_{{ quiz.id }}" value="{{ quiz.option_c }}"/> {{ quiz.option_c }}</label><br/>
+                    <label><input type="radio" name="quiz_{{ quiz.id }}" value="{{ quiz.option_d }}"/> {{ quiz.option_d }}</label>
+                </div>
+            </div>
+        {% empty %}
+            <p>No questions found for this course's quiz.</p>
+        {% endfor %}
+        {% if quizzes %}
+            <button type="submit" class="btn">Submit Quiz</button>
+        {% endif %}
+    </form>
+    <a href="{% url 'studysessions' %}" class="btn" style="background:#4f46e5;color:white; padding:8px 22px;border-radius:4px;text-decoration:none; margin-top:20px; display:inline-block;">Back to Courses</a>
+  </div>
+</body>
+</html>
