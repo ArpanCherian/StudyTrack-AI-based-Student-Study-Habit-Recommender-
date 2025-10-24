@@ -146,7 +146,7 @@
     <form action="{% url 'addstudent' %}" method="POST">
         {% csrf_token %}
         <label for="studentname">Student Name</label>
-        <input type="text" id="studentname" name="studentname" placeholder="Enter student full name" required />
+        <input type="text" id="studentname" name="studentname" placeholder="Enter student username" required />
 
         <label for="coursename">Course Name</label>
         <select id="coursename" name="coursename" required>

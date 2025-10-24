@@ -122,7 +122,7 @@
 <body>
 <div class="container">
     {% if messages %}
-        <div class="message" style="background:#d1fae5; color:#065f46; border:1px solid #a7f3d0; padding:12px; border-radius:6px; margin-bottom:20px; text-align:center;">
+        <div class="message" style="background:#d1fae5; color:#065f46; border:1px solid #a7f3d0; padding:12px; border-radius:6px; margin-bottom:20px; justify-content:center; align-items :center;">
             {% for message in messages %}
             {{ message }}
             {% endfor %}
@@ -144,15 +144,53 @@
     </div>
 
     {% if enrolled %}
-        <div style="margin:20px 0; color: #10b981;">You are enrolled in this course.</div>
-        <div class="quiz-section">
-            <!-- Add your quiz logic or Quiz button here -->
+
+    <div style="margin:20px 0; color: #10b981; text-align: center;">
+    You are enrolled in this course.
+    </div>
+
+
+    <!-- QUIZ SECTION DYNAMIC -->
+    {% if quizattempt %}
+        <div style="margin: 15px 0 22px 0; background: #eef2ff; color:#333; border-radius:8px; padding:16px; text-align:center;">
+            <span style="font-size:1.15rem; font-weight:600; color:#4f46e5;">
+                Quiz Completed ✓</span>
+            <div style="margin-top:7px;">
+                <span style="font-size:1rem;">Your quiz score:</span>
+                <span style="font-weight:700; color:#10b981; font-size:1.18rem;">{{ quizattempt.score }}%</span>
+            </div>
         </div>
+    {% else %}
+        <div style="margin:18px 0; text-align: center;">
+            <a href="{% url 'take_quiz' coursename %}" class="btn btn-primary" 
+                style="padding:12px 24px; font-size:1.08rem;">Take Quiz</a>
+        </div>
+    {% endif %}
+
+
+    <div class="videos-section" style="margin:40px 0;">
+        <h2 style="color:#4f46e5; margin-bottom:20px;">Class Videos & Links</h2>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+            {% for video in videos %}
+            <div style="background:#eef2ff; border-radius:10px; padding:14px;">
+                <div style="font-weight:600; color:#1f2937; margin-bottom:6px;">{{ video.title }}</div>
+                <iframe width="100%" height="180" style="border-radius:7px;"
+                    src="{{ video.video_url }}"
+                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                <div style="margin-top:10px;">
+                    <a href="{{ video.video_url }}" target="_blank" class="btn btn-primary" style="padding:7px 16px; font-size:0.95rem;">Open in new tab</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
     {% else %}
         <div style="text-align:center; margin:20px 0;">
             <a href="{% url 'enroll_course' coursename %}" class="btn">Enroll Now</a>
         </div>
     {% endif %}
+
 
     <a href="{% url 'studentcourses' %}" class="back"><i class="fas fa-arrow-left"></i> Back to Courses</a>
 </div>

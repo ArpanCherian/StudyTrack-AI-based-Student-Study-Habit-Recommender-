@@ -98,3 +98,19 @@ class QuizAttempt(models.Model):
     score = models.IntegerField(blank=True, null=True)
     completed = models.BooleanField(default=False)
     attempted_at = models.DateTimeField(auto_now=True)
+
+
+
+
+
+class CourseVideo(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='videos')
+    title = models.CharField(max_length=100)
+    video_url = models.URLField()
+    # Optionally: add a duration/description field
+    class Meta:
+        verbose_name = 'Course Video'
+        verbose_name_plural = 'Course Videos'
+
+    def __str__(self):
+        return f"{self.course.name} - {self.title}"

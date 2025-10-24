@@ -10,6 +10,9 @@ from django.contrib import messages
 from .models import studentdetails, userdetails
 from .models import Notification
 from django.utils import timezone
+from .models import Quiz, QuizAttempt
+from .models import Course
+from .models import userdetails
 
 
 
@@ -203,7 +206,6 @@ def add_student_view(request):
         completion = request.POST['completion']
         status = request.POST['status']
 
-        # Save to DB
         student = studentdetails(
             studentname=studentname,
             coursename=coursename,
@@ -214,12 +216,10 @@ def add_student_view(request):
             status=status
         )
         student.save()
-
         messages.success(request, "Student details added successfully!")
-        return redirect('admindashboard')  # redirect back to form or dashboard
-
-    # replace with your form template
+        return redirect('admindashboard')
     return render(request, 'newstudent.html')
+
 
 
 def ongoing_course(request):
@@ -259,7 +259,7 @@ def send_course_reminder(request):
                 email_count += 1
             except userdetails.DoesNotExist:
                 continue
-        messages.success(request, f"Sent reminders to {email_count} students.")
+        messages.success(request, f"Sent reminders to students.")
         return redirect('ongoing_course')  # Change as needed
     # For GET requests, redirect to ongoing_course
     return redirect('ongoing_course')
@@ -339,29 +339,39 @@ def allcourse(request, coursename):
     username = request.session['username']
     user = userdetails.objects.get(username=username)
 
-    enrolled = studentdetails.objects.filter(studentname=user.fullname, coursename=coursename).first()
+    enrolled = studentdetails.objects.filter(studentname=user.username, coursename=coursename).first()
     all_enrollments = studentdetails.objects.filter(coursename=coursename)
     total_students = all_enrollments.count()
     completed = all_enrollments.filter(status='Completed').count()
     completion_rate = round((completed / total_students) * 100, 2) if total_students > 0 else 0
 
-    # Find current course details
-    course_info = next((c for c in COURSES if c['name'] == coursename), None)
-    if course_info is None:
+    course_obj = Course.objects.filter(name=coursename).first()
+    if course_obj is None:
         messages.error(request, "Course not found.")
         return redirect('studentcourses')
 
+    videos = course_obj.videos.all()
+    course_info = next((c for c in COURSES if c['name'] == coursename), None)
+
+    # Quiz Attempt Logic
+    quizattempt = None
+    if enrolled:
+        quizattempt = QuizAttempt.objects.filter(student=user, coursename=coursename).first()
+
     context = {
         'coursename': coursename,
-        'description': course_info['description'],
-        'duration': course_info['duration'],
-        'courseimage': course_info['image'],
+        'description': course_obj.description,
+        'duration': course_obj.duration,
+        'courseimage': course_info['image'] if course_info else "",
         'total_students': total_students,
         'completed': completed,
         'completion_rate': completion_rate,
         'enrolled': enrolled,
+        'videos': videos,
+        'quizattempt': quizattempt,
     }
     return render(request, 'allcourse.html', context)
+
 
 
 
