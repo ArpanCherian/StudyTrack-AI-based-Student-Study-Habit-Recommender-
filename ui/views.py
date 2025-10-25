@@ -289,8 +289,8 @@ def studentcourses(request):
     username = request.session['username']
     user = userdetails.objects.get(username=username)
 
-    # Get courses enrolled (admin or by student) - use fullname (your model fields)
-    enrolled_names = set(studentdetails.objects.filter(studentname=user.fullname).values_list('coursename', flat=True))
+    # Get courses enrolled
+    enrolled_names = set(studentdetails.objects.filter(studentname=user.username).values_list('coursename', flat=True))
 
     # Mark enrollment state for every course
     courses = []
@@ -299,7 +299,32 @@ def studentcourses(request):
         course_copy['enrolled'] = course['name'] in enrolled_names
         courses.append(course_copy)
 
-    return render(request, 'studentcourse.html', {'courses': courses, 'user': user})
+    # Calculate completion rate for each course
+    course_stats = []
+    for course in COURSES:
+        total_enrolled = studentdetails.objects.filter(coursename=course['name']).count()
+        completed = studentdetails.objects.filter(coursename=course['name'], status='Completed').count()
+        completion_rate = round((completed / total_enrolled) * 100, 2) if total_enrolled > 0 else 0
+        
+        course_stats.append({
+            'name': course['name'],
+            'image': course['image'],
+            'description': course['description'],
+            'completion_rate': completion_rate,
+            'total_enrolled': total_enrolled,
+            'enrolled': course['name'] in enrolled_names
+        })
+
+    # Get top course (not already enrolled)
+    available_courses = [c for c in course_stats if not c['enrolled']]
+    top_course = max(available_courses, key=lambda x: x['completion_rate']) if available_courses else None
+
+    return render(request, 'studentcourse.html', {
+        'courses': courses,
+        'user': user,
+        'top_course': top_course
+    })
+
 
 
 def enroll_course(request, coursename):
@@ -420,3 +445,64 @@ def take_quiz(request, coursename):
         'quizzes': quizzes,
     }
     return render(request, 'quiz.html', context)
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .models import VideoProgress, CourseVideo, studentdetails, userdetails
+
+@require_POST
+def mark_video_watched(request):
+    if 'username' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+    
+    video_id = request.POST.get('video_id')
+    coursename = request.POST.get('coursename')
+    
+    username = request.session['username']
+    user = userdetails.objects.get(username=username)
+    video = CourseVideo.objects.get(id=video_id)
+    
+    # Mark video as watched
+    VideoProgress.objects.update_or_create(
+        student=user,
+        video=video,
+        defaults={'watched': True}
+    )
+    
+    # Calculate progress
+    total_videos = CourseVideo.objects.filter(course__name=coursename).count()
+    watched_videos = VideoProgress.objects.filter(
+        student=user,
+        video__course__name=coursename,
+        watched=True
+    ).count()
+    
+    progress = int((watched_videos / total_videos) * 100) if total_videos > 0 else 0
+    
+    # Update studentdetails completion and status
+    student_record = studentdetails.objects.filter(
+        studentname=user.username,
+        coursename=coursename
+    ).first()
+    
+    if student_record:
+        student_record.completion = progress
+        
+        # Automatically mark as Completed when progress reaches 100%
+        if progress >= 100:
+            student_record.status = 'Completed'
+        elif progress > 0:
+            student_record.status = 'Ongoing'
+        
+        student_record.save()
+    
+    return JsonResponse({
+        'success': True,
+        'progress': progress,
+        'watched_videos': watched_videos,
+        'total_videos': total_videos,
+        'status': student_record.status if student_record else 'Unknown'
+    })
+

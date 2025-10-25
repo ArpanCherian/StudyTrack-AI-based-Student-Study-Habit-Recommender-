@@ -114,3 +114,17 @@ class CourseVideo(models.Model):
 
     def __str__(self):
         return f"{self.course.name} - {self.title}"
+
+
+
+class VideoProgress(models.Model):
+    student = models.ForeignKey(userdetails, on_delete=models.CASCADE)
+    video = models.ForeignKey(CourseVideo, on_delete=models.CASCADE)
+    watched = models.BooleanField(default=False)
+    watched_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('student', 'video')
+
+    def __str__(self):
+        return f"{self.student.username} - {self.video.title}"

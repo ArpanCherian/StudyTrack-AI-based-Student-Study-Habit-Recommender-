@@ -168,18 +168,37 @@
     {% endif %}
 
 
+<div class="videos-section" style="margin:40px 0;">
+    <h2 style="color:#4f46e5; margin-bottom:20px;">Course Completion Progress</Progress></h2>
+    
+<!-- PROGRESS BAR -->
+<div style="margin-bottom: 20px; padding: 15px; background: #eef2ff; border-radius: 8px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span>Course Progress:</span>
+        <span id="progress-text">{% if enrolled %}{{ enrolled.completion }}{% else %}0{% endif %}%</span>
+    </div>
+    <div style="width: 100%; background: #e5e7eb; border-radius: 10px; height: 10px;">
+        <div id="progress-bar" style="width: {% if enrolled %}{{ enrolled.completion }}{% else %}0{% endif %}%; height: 100%; background: #10b981; border-radius: 10px; transition: width 0.3s;"></div>
+    </div>
+</div>
+
+    <!-- VIDEOS SECTION -->
     <div class="videos-section" style="margin:40px 0;">
         <h2 style="color:#4f46e5; margin-bottom:20px;">Class Videos & Links</h2>
         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
             {% for video in videos %}
-            <div style="background:#eef2ff; border-radius:10px; padding:14px;">
+            <div style="background:#eef2ff; border-radius:10px; padding:14px;" class="video-card" data-video-id="{{ video.id }}">
                 <div style="font-weight:600; color:#1f2937; margin-bottom:6px;">{{ video.title }}</div>
                 <iframe width="100%" height="180" style="border-radius:7px;"
                     src="{{ video.video_url }}"
-                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                <div style="margin-top:10px;">
-                    <a href="{{ video.video_url }}" target="_blank" class="btn btn-primary" style="padding:7px 16px; font-size:0.95rem;">Open in new tab</a>
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="video-iframe"
+                    data-video-id="{{ video.id }}"></iframe>
+                <div style="margin-top:10px; display: flex; justify-content: space-between; align-items: center;">
+                    <button onclick="markAsWatched({{ video.id }})" class="btn" style="padding:7px 16px; font-size:0.85rem;">Mark as Watched</button>
+                    <a href="{{ video.video_url }}" target="_blank" class="btn" style="padding:7px 16px; font-size:0.85rem; background: #6b7280;">Open</a>
                 </div>
             </div>
             {% endfor %}
@@ -194,5 +213,49 @@
 
     <a href="{% url 'studentcourses' %}" class="back"><i class="fas fa-arrow-left"></i> Back to Courses</a>
 </div>
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function markAsWatched(videoId) {
+    const csrftoken = getCookie('csrftoken');
+    
+    fetch("{% url 'mark_video_watched' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrftoken
+        },
+        body: `video_id=${videoId}&coursename={{ coursename }}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('progress-text').textContent = data.progress + '%';
+            document.getElementById('progress-bar').style.width = data.progress + '%';
+            
+            if (data.progress >= 100) {
+                alert(`🎉 Congratulations! You've completed all videos for this course!\nStatus: ${data.status}`);
+            } else {
+                alert(`Progress updated: ${data.watched_videos}/${data.total_videos} videos watched (${data.progress}%)`);
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+</script>
 </body>
 </html>
