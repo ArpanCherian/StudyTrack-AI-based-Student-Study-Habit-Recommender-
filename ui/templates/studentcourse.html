@@ -268,7 +268,7 @@
 <body>
         {% if top_course %}
     <!-- Recommended Course Modal -->
-    <div id="recommendedModal" class="modal-overlay" style="display:none;">
+    <div id="recommendedModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(41,41,68,0.38); backdrop-filter:blur(2.5px); z-index:9999; justify-content:center; align-items:center;">>
         <div class="modal-content" style="background:white; padding:30px; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.15); max-width:450px; margin:100px auto; position:relative;">
             <span id="closeModal" style="position:absolute; top:15px; right:20px; font-size:28px; cursor:pointer; color:#6b7280;">&times;</span>
             
@@ -333,9 +333,9 @@
                 <i class="fas fa-bell"></i>
                 <span>Notifications</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="/smartstudyhabit" class="nav-item">
                 <i class="fas fa-cog"></i>
-                <span>Settings</span>
+                <span>Smart Study Habit</span>
             </a>
         </div>
         <div class="sidebar-footer">

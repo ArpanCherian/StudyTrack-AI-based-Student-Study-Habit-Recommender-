@@ -506,3 +506,64 @@ def mark_video_watched(request):
         'status': student_record.status if student_record else 'Unknown'
     })
 
+
+
+from .recommender import recommend_best_course  # or import from the correct path
+from datetime import datetime
+from django.utils import timezone
+import pytz  # Ensure pytz is installed
+
+def smartstudyhabit(request):
+    # User authentication check
+    if 'user_id' not in request.session:
+        messages.error(request, "Please login to view your dashboard.")
+        return redirect('login')
+
+    username = request.session.get('username')
+    user = userdetails.objects.get(username=username)
+    students = studentdetails.objects.filter(studentname=username)
+
+    # AI-based course recommendation
+    top_course = recommend_best_course(user, COURSES, studentdetails)
+
+    # Strengths: Courses with 85%+ completion or quiz scores >= 85
+    strengths = []
+    weaknesses = []
+    # Quiz attempts used for additional metrics
+    attempts = QuizAttempt.objects.filter(student=user)
+    course_to_score = {a.coursename: (a.score or 0) for a in attempts}
+    for s in students:
+        # If completed or scored high in quiz
+        if s.completion >= 85 or course_to_score.get(s.coursename, 0) >= 85:
+            strengths.append(s.coursename)
+        # If many attempts, low completion, or low score
+        elif s.completion < 40 or course_to_score.get(s.coursename, 100) < 60:
+            weaknesses.append(s.coursename)
+
+    # Best study time logic: Find most frequent best hour from quiz attempts or similar logs
+    best_study_time = None
+    hours = []
+    IST = pytz.timezone("Asia/Kolkata")
+    for attempt in attempts:
+        if attempt.attempted_at:
+            dt = attempt.attempted_at
+            if timezone.is_aware(dt):
+                dt = dt.astimezone(IST)
+            else:
+                dt = IST.localize(dt)
+            hours.append(dt.hour)
+    if hours:
+        from collections import Counter
+        most_common_hour = Counter(hours).most_common(1)[0][0]
+        best_study_time = datetime.strptime(str(most_common_hour), "%H").strftime("%I %p").lstrip("0")
+
+    context = {
+        'username': username,
+        'students': students,
+        'top_course': top_course,
+        'strengths': strengths,
+        'weaknesses': weaknesses,
+        'best_study_time': best_study_time,
+        # Add messages and any extra data you want
+    }
+    return render(request, 'smartstudyhabit.html', context)

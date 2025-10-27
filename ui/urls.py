@@ -22,6 +22,5 @@ urlpatterns = [
     path('course/<str:coursename>/enroll/', views.enroll_course, name='enroll_course'),
     path('quiz/<str:coursename>/', views.take_quiz, name='take_quiz'),
     path('mark-video-watched/', views.mark_video_watched, name='mark_video_watched'),
-
-
+    path('smartstudyhabit/', views.smartstudyhabit, name='smartstudyhabit'),
 ]
