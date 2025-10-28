@@ -635,7 +635,6 @@
                     <tr>
                         <th>Course / Subject</th>
                         <th>Date</th>
-                        <th>Duration</th>
                         <th>Focus Score</th>
                         <th>Quiz</th>
                     </tr>
@@ -648,7 +647,6 @@
                             <div class="session-details">{{ session.topic }}</div>
                         </td>
                         <td class="session-date">{{ session.startdate|date:"M d, Y" }}</td>
-                        <td class="session-duration">{{ session.hoursspent }}</td>
                         <td>
                             <div class="progress-container">
                                 <div class="progress-bar"
@@ -683,7 +681,6 @@
                         <th>Course Name</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Hours Spent</th>
                         <th>Completion</th>
                         <th>Status</th>
                     </tr>
@@ -697,7 +694,6 @@
                         </td>
                         <td>{{ course.startdate|date:"d M Y" }}</td>
                         <td>{{ course.enddate|date:"d M Y" }}</td>
-                        <td>{{ course.hoursspent }} hrs</td>
                         <td>
                             <div class="progress-container">
                                 <div class="progress-bar"

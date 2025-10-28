@@ -233,36 +233,47 @@ def ongoing_course(request):
     return render(request, 'ongoing_course.html', {'students': students})
 
 
+from django.core.mail import send_mail
+from django.contrib import messages
+
 def send_course_reminder(request):
     if request.method == "POST":
         students = studentdetails.objects.filter(
-            status__in=['Ongoing', 'Not Started'])
+            status__in=['Ongoing', 'Not Started']
+        )
         email_count = 0
+        failed_list = []
         for student in students:
             try:
                 user = userdetails.objects.get(username=student.studentname)
+                # Compose message
+                msg = (
+                    f"Dear {user.fullname},\n\n"
+                    f"Your course '{student.coursename}' is not complete ({student.completion}%). "
+                    "Please log in and complete your course as soon as possible."
+                )
                 send_mail(
                     subject="Reminder: Complete your course",
-                    message=(
-                        f"Dear {user.fullname},\n\n"
-                        f"Your course '{student.coursename}' is not complete ({student.completion}%). "
-                        "Please log in and complete your course as soon as possible."
-                    ),
-                    from_email="arpanjacobcherian@gmail.com",  # Replace appropriately
+                    message=msg,
+                    from_email="arpanjacobcherian@gmail.com",  # use the one in settings
                     recipient_list=[user.email],
-                    )
-                    # Create a notification
+                    fail_silently=False,
+                )
                 Notification.objects.create(
-                        student=user,
-                        message=f"Reminder: Please complete your course '{student.coursename}'. Completion: {student.completion}%"
-                    )
+                    student=user,
+                    message=f"Reminder: Please complete your course '{student.coursename}'. Completion: {student.completion}%"
+                )
                 email_count += 1
-            except userdetails.DoesNotExist:
+            except Exception as e:
+                failed_list.append(f"{student.studentname}: {str(e)}")
                 continue
-        messages.success(request, f"Sent reminders to students.")
-        return redirect('ongoing_course')  # Change as needed
-    # For GET requests, redirect to ongoing_course
+        summary_msg = f"Sent reminders to {email_count} students."
+        if failed_list:
+            summary_msg += " Errors: " + "; ".join(failed_list)
+        messages.success(request, summary_msg)
+        return redirect('ongoing_course')
     return redirect('ongoing_course')
+
 
 
 def usernotification(request):

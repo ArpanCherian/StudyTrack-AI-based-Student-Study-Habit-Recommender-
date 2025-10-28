@@ -183,7 +183,6 @@
                         <th>Course Name</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Hours Spent</th>
                         <th>Completion</th>
                         <th>Status</th>
                     </tr>
@@ -195,7 +194,6 @@
                         <td>{{ student.coursename }}</td>
                         <td>{{ student.startdate }}</td>
                         <td>{{ student.enddate }}</td>
-                        <td>{{ student.hoursspent }} hrs</td>
                         <td>{{ student.completion }}% Complete</td>
                         <td>
                             {% if student.status == 'Ongoing' %}

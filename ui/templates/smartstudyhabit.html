@@ -272,7 +272,6 @@
                         <th>Course Name</th>
                         <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Hours Spent</th>
                         <th>Completion</th>
                         <th>Status</th>
                     </tr>
@@ -283,7 +282,6 @@
                         <td><div class="course-name">{{ student.coursename }}</div></td>
                         <td>{{ student.startdate }}</td>
                         <td>{{ student.enddate }}</td>
-                        <td>{{ student.hoursspent }} hrs</td>
                         <td>
                             <div class="progress-container">
                                 <div class="progress-bar" data-completion="{{ student.completion|default:0|floatformat:0 }}"></div>

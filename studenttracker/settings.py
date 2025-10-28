@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  # Use 'django.db.backends.sqlite3' for SQLite
         'NAME': 'studytrack',  # Database name
         'USER': 'root',       # Your database username
-        'PASSWORD': 'arpan@root123',   # Your database password
+   # Your database password
         'HOST': 'localhost',   # Database host, usually 'localhost' for local development
         'PORT': '3306',        # Default MySQL port
     }
@@ -128,5 +128,11 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # For Gmail, otherwise use your provider
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+ # Use an app password if using Gmail with 2FA
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
