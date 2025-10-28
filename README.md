@@ -25,9 +25,8 @@ StudyTrack is a Django-based web application designed to help students improve t
 - SQLite (default) or other supported database
 
 ### Setup Steps
-1. Clone the repository:
-git clone https://github.com/ArpanCherian/StudyTrack-AI-based-Student-Study-Habit-Recommender
-cd StudyTrack
+1. Clone the repository: git clone https://github.com/ArpanCherian/StudyTrack-AI-based-Student-Study-Habit-Recommender
+- cd StudyTrack
 
 2. Create and activate virtual environment:
 - Linux/Mac:
@@ -78,5 +77,5 @@ python manage.py runserver
 
 ## Contact
 
-Name - Arpan Cherian 
-Mail - arpanjcherian@gmail.com
+- Name - Arpan Cherian 
+- Mail - arpanjcherian@gmail.com
